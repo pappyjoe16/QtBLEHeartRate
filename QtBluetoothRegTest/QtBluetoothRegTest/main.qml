@@ -6,7 +6,7 @@ import Device 1.0
 
 Window {
     width: 410
-    height: 960
+    height: 860
     visible: true
     id: mainWindow
     title: "gymAppTest2"
@@ -17,6 +17,11 @@ Window {
 
     TestRegPage {
         id: mainPage
+        visible: false
+    }
+
+    TestQml {
+        id: tastPage
         visible: true
     }
 }

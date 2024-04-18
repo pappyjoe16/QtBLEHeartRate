@@ -94,7 +94,19 @@ void Device::addDevice(const QBluetoothDeviceInfo &info)
         if (d->getName().contains("HW")) {
             devices.append(d);
             qWarning() << "Discovered BLE Device " + d->getName() << "Address: " + d->getAddress();
-            emit sendAddress(QString(d->getAddress()));
+            emit sendAddress(QString(d->getName()), QString(d->getAddress()));
+        }
+
+        if (d->getName().contains("BX100-L")) {
+            devices.append(d);
+            qWarning() << "Discovered BLE Device " + d->getName() << "Address: " + d->getAddress();
+            emit sendAddress(QString(d->getName().remove("BX100-L")), QString(d->getAddress()));
+        }
+
+        if (d->getName().contains("BX100-R")) {
+            devices.append(d);
+            qWarning() << "Discovered BLE Device " + d->getName() << "Address: " + d->getAddress();
+            emit sendAddress(QString(d->getName().remove("BX100-R")), QString(d->getAddress()));
         }
     }
 }

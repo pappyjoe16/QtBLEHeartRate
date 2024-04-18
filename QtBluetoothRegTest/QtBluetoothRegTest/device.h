@@ -22,7 +22,7 @@ public:
     ~Device();
 
 signals:
-    void sendAddress(QVariant);
+    void sendAddress(QVariant, QVariant);
     void measuringChanged(QVariant);
     void aliveChanged();
     void statsChanged();

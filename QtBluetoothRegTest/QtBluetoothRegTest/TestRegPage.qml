@@ -5,8 +5,8 @@ import QtQuick.Window 2.15
 Item {
     id: name
     visible: true
-    width: Screen.width / 2
-    height: Screen.height / 2
+    width: 410
+    height: 860
 
     function removePrefix(str) {
         var index = str.indexOf(":")
@@ -42,40 +42,78 @@ Item {
     }
 
     Rectangle {
-        id: connectButton
-        width: parent.width
-        height: parent.height / 2
-        visible: false
-        anchors.bottom: parent.bottom
-        color: "grey"
 
-        Text {
-            id: address
-            anchors.centerIn: parent
-            color: "red"
-            font.pixelSize: 20
-            visible: true
+        id: viewContainer
+        color: "#e6e6e6"
+        radius: 14
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.top: button.bottom
+        anchors.bottom: parent.bottom
+        anchors.leftMargin: 12
+        anchors.rightMargin: 13
+        anchors.topMargin: 6
+        anchors.bottomMargin: 10
+
+        ListView {
+            id: bleListView
+            anchors.fill: parent
+            model: bleModel
+
+            //clip: true
+            delegate: Rectangle {
+
+                //required property int index
+                width: parent.width
+                height: 50
+
+                color: index % 2 === 0 ? "#262626" : "#404040"
+                radius: 14
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        device.connectDevice(bleAddress)
+                        console.log(bleName + ": " + bleAddress)
+                    }
+                }
+
+                Text {
+                    text: bleName // Display the BLE name
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.left: parent.left
+                    leftPadding: 10
+                    font.pixelSize: 20
+                    color: "white"
+                }
+                Text {
+                    text: bleAddress // Display the BLE address
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.right: parent.right
+                    rightPadding: 10
+                    font.pixelSize: 20
+                    color: "white"
+                }
+            }
         }
 
-        MouseArea {
-            anchors.fill: parent
-            onClicked: {
-                connectButton.color = "lightred"
+        function addBleDevice(bleName, bleAddress) {
+            bleModel.append({
+                                "bleName": bleName,
+                                "bleAddress": bleAddress
+                            })
+        }
 
-                console.log(address.text)
-                var newAddressText = removePrefix(address.text)
-                console.log(newAddressText)
-                device.connectDevice(newAddressText)
-            }
+        ListModel {
+            id: bleModel
         }
     }
 
     Connections {
         target: device
-        function onSendAddress(bleAddress) {
-            connectButton.visible = true
-            console.log("Address: " + bleAddress)
-            address.text = "Address:" + bleAddress
+        function onSendAddress(bleName, bleAddress) {
+            viewContainer.visible = true
+            console.log(bleName + ": " + bleAddress)
+            viewContainer.addBleDevice(bleName, bleAddress)
         }
 
         function onMeasuringChanged(hrVal) {
